@@ -10,17 +10,18 @@ class GpiosManager():
         super().__init__()
         wiringpi.wiringPiSetup()
         #pines de salidas
-        self.cerradura1 = 6
-        self.electroiman = 5
-        self.actuador_up = 21
-        self.actuador_down = 20
-        self.semaforo = 27
-        self.pin_libre1 = 17
-        self.pin_libre2 = 24
-        self.pin_libre3 = 23
+        self.cerradura1 = 8
+        self.electroiman = 11
+        self.actuador_up = 12
+        self.actuador_down = 14
+        self.semaforo = 17
+        self.pin_libre1 = 19
+        self.pin_libre2 = 20
+        self.pin_libre3 = 22
         # pines de entradas
-        self.fin_carrera = 16
-        self.sensor = 26
+        self.fin_carrera =23 
+        self.sensor = 25
+
         # declaracion de salidas
         wiringpi.pinMode(self.cerradura1, GPIO.OUTPUT)
         wiringpi.pinMode(self.electroiman, GPIO.OUTPUT)
