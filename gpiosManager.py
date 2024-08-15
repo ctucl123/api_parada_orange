@@ -1,10 +1,14 @@
-import RPi.GPIO as GPIO
+import wiringpi
 import time
+from wiringpi import GPIO
+
+
+
+
 class GpiosManager():
     def __init__(self):
         super().__init__()
-        GPIO.setmode(GPIO.BCM)
-        GPIO.setwarnings(False)
+        wiringpi.wiringPiSetup()
         #pines de salidas
         self.cerradura1 = 6
         self.electroiman = 5
@@ -18,120 +22,78 @@ class GpiosManager():
         self.fin_carrera = 16
         self.sensor = 26
         # declaracion de salidas
-        GPIO.setup(self.cerradura1, GPIO.OUT)
-        GPIO.setup(self.electroiman, GPIO.OUT)
-        GPIO.setup(self.actuador_up, GPIO.OUT)
-        GPIO.setup(self.actuador_down, GPIO.OUT)
-        GPIO.setup(self.semaforo, GPIO.OUT)
-        GPIO.setup(self.pin_libre1, GPIO.OUT)
-        GPIO.setup(self.pin_libre2, GPIO.OUT)
-        GPIO.setup(self.pin_libre3, GPIO.OUT)
+        wiringpi.pinMode(self.cerradura1, GPIO.OUTPUT)
+        wiringpi.pinMode(self.electroiman, GPIO.OUTPUT)
+        wiringpi.pinMode(self.actuador_up, GPIO.OUTPUT)
+        wiringpi.pinMode(self.actuador_down, GPIO.OUTPUT)
+        wiringpi.pinMode(self.semaforo, GPIO.OUTPUT)
+        wiringpi.pinMode(self.pin_libre1, GPIO.OUTPUT)
+        wiringpi.pinMode(self.pin_libre2, GPIO.OUTPUT)
+        wiringpi.pinMode(self.pin_libre3, GPIO.OUTPUT)
         # declaracion de entradas
-        GPIO.setup(self.sensor, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(self.fin_carrera, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-       
-        
+        wiringpi.pinMode(self.sensor, wiringpi.GPIO.INPUT)
+        wiringpi.pinMode(self.fin_carrera, wiringpi.GPIO.INPUT)
+
+        wiringpi.pullUpDnControl(self.sensor, wiringpi.GPIO.PUD_UP)
+        wiringpi.pullUpDnControl(self.fin_carrera, wiringpi.GPIO.PUD_UP)
+
     def turnstileOpen(self):
-        GPIO.output(self.cerradura1, GPIO.LOW)  # Activar la cerradura 1 # Desactivar la cerradura 2
-        GPIO.output(self.semaforo, GPIO.LOW) 
-        return "puerta general abierta" 
-    def turnstileBlock(self):
-        GPIO.output(self.cerradura1, GPIO.HIGH)
-        GPIO.output(self.semaforo, GPIO.HIGH)
-        return "puerta general bloqueada" 
+            wiringpi.digitalWrite(self.cerradura1, GPIO.LOW)
+            wiringpi.digitalWrite(self.semaforo, GPIO.HIGH)
+            return "puerta general abierta"
     
+    def turnstileBlock(self):
+        wiringpi.digitalWrite(self.cerradura1, GPIO.HIGH)
+        wiringpi.digitalWrite(self.semaforo, GPIO.HIGH)
+        return "puerta general bloqueada" 
+
     def testCerradura1(self):
-        GPIO.output(self.cerradura1, GPIO.LOW)
+        wiringpi.digitalWrite(self.cerradura1, GPIO.LOW)
         time.sleep(2)
-        GPIO.output(self.cerradura1, GPIO.HIGH)
+        wiringpi.digitalWrite(self.cerradura1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 1 testeada con exito'
+    
     def testLuzLed(self):
-        GPIO.output(self.semaforo, GPIO.LOW)
+        wiringpi.digitalWrite(self.semaforo, GPIO.LOW)
         time.sleep(2)
-        GPIO.output(self.semaforo, GPIO.HIGH)
+        wiringpi.digitalWrite(self.semaforo, GPIO.HIGH)
         time.sleep(2)
         return 'Luz Led testeada con exito'
     
     def testCerradura2(self):
-        GPIO.output(self.pin_libre1, GPIO.LOW)
+        wiringpi.digitalWrite(self.pin_libre1, GPIO.LOW)
         time.sleep(2)
-        GPIO.output(self.pin_libre1, GPIO.HIGH)
+        wiringpi.digitalWrite(self.pin_libre1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 2 testeada con exito'
 
     def specialDoorOpen(self):
-        GPIO.output(self.actuador_down, GPIO.HIGH)
-        GPIO.output(self.actuador_up, GPIO.LOW)
-        GPIO.output(self.semaforo, GPIO.LOW) 
+        wiringpi.digitalWrite(self.actuador_down, GPIO.HIGH)
+        wiringpi.digitalWrite(self.actuador_up, GPIO.LOW)
+        wiringpi.digitalWrite(self.semaforo, GPIO.LOW) 
         return "Puerta especial Abierta"
     
     def specialDoorClose(self):
-        GPIO.output(self.actuador_up, GPIO.HIGH)
-        GPIO.output(self.actuador_down, GPIO.LOW)
-        GPIO.output(self.semaforo, GPIO.HIGH) 
+        wiringpi.digitalWrite(self.actuador_up, GPIO.HIGH)
+        wiringpi.digitalWrite(self.actuador_down, GPIO.LOW)
+        wiringpi.digitalWrite(self.semaforo, GPIO.HIGH) 
         return "Puerta Especial Cerrada"
     
     def specialDoorOff(self):
-        GPIO.output(self.actuador_up, GPIO.HIGH)
-        GPIO.output(self.actuador_down, GPIO.HIGH)
+        wiringpi.digitalWrite(self.actuador_up, GPIO.HIGH)
+        wiringpi.digitalWrite(self.actuador_down, GPIO.HIGH)
         return "sistema silla de ruedas"
     
     def ReadSensor(self):
-        return bool(GPIO.input(self.sensor))
+        return bool(wiringpi.digitalRead(self.sensor))
     
     def ReadFinCarrera(self):
-        return bool(GPIO.input(self.fin_carrera))
+        return bool(wiringpi.digitalRead(self.fin_carrera))
     def electroImanOn(self):
-        GPIO.output(self.electroiman,GPIO.LOW)
+        wiringpi.digitalWrite(self.electroiman,GPIO.LOW)
         return 'electro iman activado'
     
     def electroImanOff(self):
-        GPIO.output(self.electroiman,GPIO.HIGH)
+        wiringpi.digitalWrite(self.electroiman,GPIO.HIGH)
         return 'electro iman desactivado'
-    
-    # def testearSensor(self):
-    #     inicio = time.time()
-    #     while time.time() - inicio < target_time:
-
-    def testearReles(self):
-        for i in range(3):
-            GPIO.output(self.cerradura1,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.electroiman,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.actuador_up,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.actuador_down,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.semaforo,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre1,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre2,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre3,GPIO.LOW)
-            time.sleep(1)
-            GPIO.output(self.pin_libre3,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.pin_libre2,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.pin_libre1,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.semaforo,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.actuador_down,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.actuador_up,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.electroiman,GPIO.HIGH)
-            time.sleep(1)
-            GPIO.output(self.cerradura1,GPIO.HIGH)
-            time.sleep(1)
-
-        
-        return 'Test Terminado'
-    
-    
-
-        
