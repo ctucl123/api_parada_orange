@@ -98,3 +98,42 @@ class GpiosManager():
     def electroImanOff(self):
         wiringpi.digitalWrite(self.electroiman,GPIO.HIGH)
         return 'electro iman desactivado'
+    
+    def testearReles(self):
+        for i in range(3):
+            GPIO.output(self.cerradura1,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.electroiman,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.actuador_up,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.actuador_down,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.semaforo,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.pin_libre1,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.pin_libre2,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.pin_libre3,GPIO.LOW)
+            time.sleep(1)
+            GPIO.output(self.pin_libre3,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.pin_libre2,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.pin_libre1,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.semaforo,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.actuador_down,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.actuador_up,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.electroiman,GPIO.HIGH)
+            time.sleep(1)
+            GPIO.output(self.cerradura1,GPIO.HIGH)
+            time.sleep(1)
+
+        
+        return 'Test Terminado'
+    
