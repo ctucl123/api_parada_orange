@@ -77,7 +77,7 @@ def rs232_Api():
             return  json.dumps({"validations":rs232.n_validations})
         return
 
-@app.route('/api/database', methods=['GET', 'POST'])
+@app.route('/api/mecanism', methods=['GET', 'POST'])
 def mecanism_Api():
     if request.method == 'GET':
         params_mecanism = {
