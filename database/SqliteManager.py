@@ -31,12 +31,12 @@ class SqliteManager(threading.Thread):
                         costo = float(int(aux_data[46:54])/100)
                         saldo = float(int(aux_data[-8:])/100)
                         saldo_anterior = float(int(aux_data[38:46])/100)
-                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.place,self.lat,self.lon,data_time))
+                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.lat,self.lon,data_time))
                         self.aux_validation_target = self.rs232.n_validations
 
     def add_transaction(self,conn, transaction):
-        sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,uuid,place,lat,lon,date)
-                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) '''
+        sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,uuid,lat,lon,date)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?) '''
         cur = conn.cursor()
         cur.execute(sql, transaction)
         conn.commit()
@@ -82,7 +82,6 @@ class SqliteManager(threading.Thread):
                     previous real NOT NULL,
                     balance real NOT NULL,
                     uuid text    NOT NULL,
-                    place text    NOT NULL,
                     lat text NOT NULL,
                     lon text NOT NULL,
                     date timestamp NOT NULL 
