@@ -64,6 +64,8 @@ def helloworld():
             result == gpios.testearReles()
         elif operation == 'ActuadorOff':
             result == gpios.specialDoorOff()
+        elif operation == 'validations':
+            result == rs232.n_validations
     return render_template('home.html', result=result)
 
 @app.route("/datos")
@@ -83,7 +85,7 @@ if __name__ == "__main__":
     gpios = GpiosManager()
     rs232.start()
     manager.start()
-    database.start()
+    #database.start()
     # audio.start()
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)
@@ -91,6 +93,6 @@ if __name__ == "__main__":
         stop_event.set()
         rs232.join()
         manager.join()
-        database.join()
+        #database.join()
         # audio.join()
         print("programa terminado!")

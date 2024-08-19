@@ -18,11 +18,12 @@ class rs232Comunication(threading.Thread):
         while not self.stop_event.is_set():
             with self.lock:
                 if self.ser.in_waiting > 0:
-                    linea = self.ser.readline().decode().strip() 
-                    if linea:
+                    trama = self.ser.readline().decode().strip() 
+                    if trama:
                         #print(f"Datos crudos recibidos: {linea}")
-                        if linea.startswith('$>') and linea.endswith('#'):
-                            data_string = linea[2:-1]  
+                        if trama.startswith('$>') and trama.endswith('#'):
+                            data_string = trama[2:-1]
+                            self.n_validations += 1  
                             if len(data_string) == 64:
                                     self.data = data_string
                                     self.validation = True
@@ -38,7 +39,8 @@ class rs232Comunication(threading.Thread):
                     
             
     def getData(self):
-        return str(self.data) 
+        return str(self.data)
+    
     def updateValidations(self,number):
         self.n_validations = number
  
