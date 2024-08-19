@@ -92,9 +92,10 @@ def mecanism_Api():
         elif json_data['operation'] == 'CloseSpecial':
             gpios.specialDoorClose()
             result = "puerta especial cerrandose !!!!"
-        else: 
-            pass
         return jsonify({'result':result})
+    
+
+
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
