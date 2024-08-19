@@ -61,35 +61,35 @@ def mecanism_Api():
         }
         return jsonify({'result':params_mecanism})
     elif request.method == 'POST':
-        options = request.get_json()
-        print(options)
-        if options['operation'] == 'ReadSensor':
+        json_data = request.get_json()
+        print(json_data)
+        if json_data['operation'] == 'ReadSensor':
             result = gpios.ReadSensor()
-        elif options['operation'] == 'ReadFin':
+        elif json_data['operation'] == 'ReadFin':
             result = gpios.ReadFinCarrera()
-        elif options['operation'] == 'generatePass':
+        elif json_data['operation'] == 'generatePass':
             manager.generarPase()
             result = 'Pase Generado'
-        elif options['operation'] == 'TestCerradura1':
+        elif json_data['operation'] == 'TestCerradura1':
             result = gpios.testCerradura1()
-        elif options['operation'] == 'TestCerradura2':
+        elif json_data['operation'] == 'TestCerradura2':
             result = gpios.testCerradura2()
-        elif options['operation'] == 'TestLuzLed':
+        elif json_data['operation'] == 'TestLuzLed':
             result = gpios.testLuzLed()
-        elif options['operation'] == 'TestSpecial':
+        elif json_data['operation'] == 'TestSpecial':
             result = manager.generarEspecialPass()
-        elif options['operation'] == 'ElectroImanOn':
+        elif json_data['operation'] == 'ElectroImanOn':
             result = gpios.electroImanOn()
-        elif options['operation'] == 'ElectroImanOff':
+        elif json_data['operation'] == 'ElectroImanOff':
             result = gpios.gpios.electroImanOff()
-        elif options['operation'] == 'TestearReles':
+        elif json_data['operation'] == 'TestearReles':
             result = gpios.testearReles()
-        elif options['operation'] == 'ActuadorOff':
+        elif json_data['operation'] == 'ActuadorOff':
             result = gpios.specialDoorOff()
-        elif options['operation'] == 'OpenSpecial':
+        elif json_data['operation'] == 'OpenSpecial':
             gpios.specialDoorOpen()
             result = "puerta especial abriendose !!!!"
-        elif options['operation'] == 'CloseSpecial':
+        elif json_data['operation'] == 'CloseSpecial':
             gpios.specialDoorClose()
             result = "puerta especial cerrandose !!!!"
         else: 
