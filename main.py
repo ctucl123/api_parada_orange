@@ -91,6 +91,7 @@ def db_Api():
         params = request.get_json()
         if not params:
             return jsonify({"error": "No se recibió JSON"}), 400
+        print(params)
         return jsonify({"mensaje": "Datos recibidos", "datos": params}), 200
 
 

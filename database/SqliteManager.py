@@ -90,7 +90,10 @@ class SqliteManager(threading.Thread):
                     time_special_door INTEGER NOT NULL,
                     time_delay_turnstile INTEGER NOT NULL,
                     time_delay_special INTEGER NOT NULL,
-                    date timestamp INTEGER NOT NULL
+                    date timestamp INTEGER NOT NULL,
+                    uuid text NOT NULL,
+                    lat text NOT NULL,
+                    lon text NOT NULL
             );"""
             ]
 
