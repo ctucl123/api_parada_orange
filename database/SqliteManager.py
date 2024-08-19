@@ -18,12 +18,7 @@ class SqliteManager(threading.Thread):
             with self.rs232.lock:
                 if self.rs232.validation:
                     if self.rs232.n_validations != self.aux_validation_target:
-                        #primero se debe tratar los datos
-                        aux_data1 = str(self.rs232.data[1:-1])
-                        print("datos crudos: ",aux_data1)
-                        aux_data2 = [int(digito) for digito in aux_data1]
-                        print("datos a lista: ",aux_data2)
-                        aux_data = ''.join([str(numero) for numero in aux_data1])
+                        aux_data = str(self.rs232.data[1:-1])
                         current_datetime = datetime.now()
                         data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
                         codigo =aux_data[25:34]
