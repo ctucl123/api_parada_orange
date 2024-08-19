@@ -44,15 +44,15 @@ class SqliteManager(threading.Thread):
         cur.execute(sql, parameter)
         conn.commit()
         return cur.lastrowid
-    def get_transactions(self,conn):
-        cursor = conn.cursor()
-        cursor.execute(f"SELECT * FROM transactions")
-        filas = cursor.fetchall()
-        nombres_columnas = [descripcion[0] for descripcion in cursor.description]
-        resultado = [dict(zip(nombres_columnas, fila)) for fila in filas]
-        json_resultado = json.dumps(resultado, indent=4)
-        conn.close()
-        return json_resultado
+    def get_transactions(self):
+        with sqlite3.connect('app.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM transactions")
+            filas = cursor.fetchall()
+            nombres_columnas = [descripcion[0] for descripcion in cursor.description]
+            resultado = [dict(zip(nombres_columnas, fila)) for fila in filas]
+            json_resultado = json.dumps(resultado, indent=4)
+            return json_resultado
 
     def create_tables(self):
         sql_statements = [ 
@@ -79,7 +79,6 @@ class SqliteManager(threading.Thread):
                 cursor = conn.cursor()
                 for statement in sql_statements:
                     cursor.execute(statement)
-                
                 conn.commit()
         except sqlite3.Error as e:
             print("OCURRIO ALGO")
