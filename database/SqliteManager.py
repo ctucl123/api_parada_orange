@@ -19,7 +19,7 @@ class SqliteManager(threading.Thread):
                 if self.rs232.validation:
                     if self.rs232.n_validations != self.aux_validation_target:
                         #primero se debe tratar los datos
-                        aux_data1 = str(self.rs232.data)
+                        aux_data1 = str(self.rs232.data[1:-1])
                         print("datos crudos: ",aux_data1)
                         aux_data2 = [int(digito) for digito in aux_data1]
                         print("datos a lista: ",aux_data2)
