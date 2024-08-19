@@ -62,6 +62,7 @@ def mecanism_Api():
         return jsonify({'result':params_mecanism})
     elif request.method == 'POST':
         options = request.get_json()
+        print(options)
         if options['operation'] == 'ReadSensor':
             result = gpios.ReadSensor()
         elif options['operation'] == 'ReadFin':
