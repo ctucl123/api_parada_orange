@@ -4,6 +4,7 @@ from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
+
 #from audioManager import AudioManager
 app = Flask(__name__)
 stop_event = threading.Event()
@@ -50,6 +51,7 @@ def rs232_Api():
 
 @app.route('/api/mecanism', methods=['GET', 'POST'])
 def mecanism_Api():
+    print("se realiza una peticion")
     if request.method == 'GET':
         params_mecanism = {
             "time_puerta_general":manager.time_puerta_general,
@@ -62,6 +64,8 @@ def mecanism_Api():
         return jsonify({'result':params_mecanism})
     elif request.method == 'POST':
         json_data = request.get_json()
+        if not json_data:
+            return jsonify({"error": "No se recibió JSON"}), 400
         print(json_data)
         if json_data['operation'] == 'ReadSensor':
             result = gpios.ReadSensor()
