@@ -76,7 +76,20 @@ def rs232_Api():
         if operation == "validations":
             return  json.dumps({"validations":rs232.n_validations})
         return
-    
+
+@app.route('/api/database', methods=['GET', 'POST'])
+def mecanism_Api():
+    if request.method == 'GET':
+        params_mecanism = {
+            "time_puerta_general":manager.time_puerta_general,
+            "time_puerta_especial":manager.time_puerta_especial,
+            "time_open_special":manager.time_open_special,
+            "time_close_special":manager.time_close_special,
+            "time_delay_turnstile":manager.time_delay_turnstile,
+            "time_delay_special":manager.time_delay_special,
+        }
+        return jsonify(params_mecanism)
+
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
@@ -129,7 +142,17 @@ if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
     manager = Manager(stop_event=stop_event,rs232=rs232) 
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
-    database.currentParameters()
+    init_params = database.currentParameters()
+    manager.time_puerta_general = init_params[2]
+    manager.time_puerta_especial = init_params[5]
+    manager.time_open_special = init_params[3]
+    manager.time_close_special = init_params[4]
+    manager.time_delay_turnstile = init_params[6]
+    manager.time_delay_special = init_params[7]
+    database.uuid = init_params[9]
+    database.place = init_params[1]
+    database.lat = init_params[10]
+    database.lon = init_params[11]
     # audio = AudioManager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
     rs232.start()
