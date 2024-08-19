@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request,jsonify
 import threading
 from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
@@ -83,7 +83,16 @@ def db_Api():
         operation = request.form.get('operation')
         if operation == "transactions":
             return  database.get_transactions()
-        return
+        elif operation == "parameters":
+            return database.get_parameters()
+        else:
+            return 'bad request!', 400
+    elif request.method == 'POST':
+        params = request.get_json()
+        if not params:
+            return jsonify({"error": "No se recibió JSON"}), 400
+        return jsonify({"mensaje": "Datos recibidos", "datos": params}), 200
+
 
 @app.route("/datos")
 def datos():
