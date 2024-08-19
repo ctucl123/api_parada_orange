@@ -91,7 +91,18 @@ def db_Api():
         params = request.get_json()
         if not params:
             return jsonify({"error": "No se recibió JSON"}), 400
-        print(params)
+        try:
+            _data = (
+                     params['place'],params['time_turnstile'],
+                     params['time_open_actuator'],params['time_close_actuator'],
+                     params['time_special_door'],params['time_delay_turnstile'],
+                     params['time_delay_special'],params['date'],params['uuid'],
+                     params['lat'],params['lon']
+                     )
+            print(_data)
+        except:
+            return jsonify({"error": "No se recibió JSON Adecuadamente"}), 400
+        
         return jsonify({"mensaje": "Datos recibidos", "datos": params}), 200
 
 

@@ -40,8 +40,8 @@ class SqliteManager(threading.Thread):
         return cur.lastrowid
 
     def add_parameter(self,conn, parameter):
-        sql = ''' INSERT INTO parameters(place,time_turnstile,time_open_actuator,time_close_actuator,time_special_door,time_delay_turnstile,time_delay_special,date)
-                VALUES(?,?,?,?,?,?,?,?) '''
+        sql = ''' INSERT INTO parameters(place,time_turnstile,time_open_actuator,time_close_actuator,time_special_door,time_delay_turnstile,time_delay_special,date,uuid,lat,lon)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?) '''
         cur = conn.cursor()
         cur.execute(sql, parameter)
         conn.commit()
