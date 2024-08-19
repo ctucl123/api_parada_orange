@@ -11,7 +11,10 @@ class SqliteManager(threading.Thread):
         self.stop_event = stop_event
         self.create_tables()
         self.aux_validation_target = 0
-        self.parameters = {'place':'PARADA PRUEBA'}
+        self.uuid = "idprueba"
+        self.place = "Parada de prueba"
+        self.lat = "0.0"
+        self.lon = "0.0"
 
     def run(self):
         while not self.stop_event.is_set():
@@ -28,12 +31,12 @@ class SqliteManager(threading.Thread):
                         costo = float(int(aux_data[46:54])/100)
                         saldo = float(int(aux_data[-8:])/100)
                         saldo_anterior = float(int(aux_data[38:46])/100)
-                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.parameters['place'],costo,saldo_anterior,saldo,data_time))
+                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.place,self.lat,self.lon,data_time))
                         self.aux_validation_target = self.rs232.n_validations
 
     def add_transaction(self,conn, transaction):
-        sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,date)
-                VALUES(?,?,?,?,?,?,?,?,?) '''
+        sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,uuid,place,lat,lon,date)
+                VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?) '''
         cur = conn.cursor()
         cur.execute(sql, transaction)
         conn.commit()
@@ -78,6 +81,10 @@ class SqliteManager(threading.Thread):
                     cost real    NOT NULL,
                     previous real NOT NULL,
                     balance real NOT NULL,
+                    uuid text    NOT NULL,
+                    place text    NOT NULL,
+                    lat text NOT NULL,
+                    lon text NOT NULL,
                     date timestamp NOT NULL 
             );"""
             ,
@@ -112,6 +119,18 @@ class SqliteManager(threading.Thread):
             with sqlite3.connect('app.db') as conn:
                 transaction_id = self.add_transaction(conn, _data)
                 print(f'Created a TRANSACTION with the id {transaction_id}')
+        except sqlite3.Error as e:
+            print(e)
+    def currentParameters(self):
+        try:
+            with sqlite3.connect('app.db') as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    SELECT * FROM parameters ORDER BY id DESC LIMIT 1
+                ''')
+                last_register = cursor.fetchone()
+                print(last_register)
+                return last_register
         except sqlite3.Error as e:
             print(e)
 

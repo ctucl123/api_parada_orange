@@ -99,6 +99,16 @@ def db_Api():
                      params['time_delay_special'],params['date'],params['uuid'],
                      params['lat'],params['lon']
                      )
+            manager.time_puerta_general = params['time_turnstile']
+            manager.time_puerta_especial = params['time_special_door']
+            manager.time_open_special = params['time_open_actuator']
+            manager.time_close_special = params['time_close_actuator']
+            manager.time_delay_turnstile = params['time_delay_turnstile']
+            manager.time_delay_special = params['time_delay_special']
+            database.uuid = params['uuid']
+            database.place = params['place']
+            database.lat = params['lat']
+            database.lon = params['lon']
             database.insert_parameter(_data)
         except:
             return jsonify({"error": "No se recibió JSON Adecuadamente"}), 400
@@ -119,6 +129,7 @@ if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
     manager = Manager(stop_event=stop_event,rs232=rs232) 
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
+    database.currentParameters()
     # audio = AudioManager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
     rs232.start()
