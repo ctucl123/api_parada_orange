@@ -58,7 +58,7 @@ class Manager(threading.Thread):
         super().__init__()
         self.rs232 = rs232
         self.stop_event = stop_event
-        self.activate = True
+        self.activate = True # esta variable se debera quitar
         self.timer_puerta_general = 12
         self.timer_puerta_especial = 12
         self.activatePass = 0
@@ -86,7 +86,7 @@ class Manager(threading.Thread):
                         self.specialPass = aux_pass_2
                     temporizador_special.join()
                 else:    
-                    if self.rs232.validation and self.activate:
+                    if self.rs232.validation:
                         if self.rs232.data[18] != '3':
                             temporizador_thread = threading.Thread(target=timer,args=(self.timer_puerta_general,))
                             temporizador_thread.start()
