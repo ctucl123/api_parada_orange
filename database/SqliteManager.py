@@ -128,7 +128,6 @@ class SqliteManager(threading.Thread):
                     SELECT * FROM parameters ORDER BY id DESC LIMIT 1
                 ''')
                 last_register = cursor.fetchone()
-                print(last_register)
                 return last_register
         except sqlite3.Error as e:
             print(e)
