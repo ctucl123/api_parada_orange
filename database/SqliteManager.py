@@ -18,7 +18,7 @@ class SqliteManager(threading.Thread):
             with self.rs232.lock:
                 if self.rs232.validation:
                     if self.rs232.n_validations != self.aux_validation_target:
-                        aux_data = self.rs232.data
+                        aux_data = str(self.rs232.data)
                         print(aux_data)
                         current_datetime = datetime.now()
                         data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
