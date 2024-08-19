@@ -2,13 +2,7 @@ import sqlite3
 import threading
 from datetime import datetime
 import json
-# current_datetime = datetime.now()
 
-# data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-
-# codigo = '00100580000115620006565611212'
-# data = (codigo,str(data_time))
-# data2 = (12,17,17,12,2,1,data_time)
 
 class SqliteManager(threading.Thread):
     def __init__(self,rs232, stop_event):
@@ -17,6 +11,7 @@ class SqliteManager(threading.Thread):
         self.stop_event = stop_event
         self.create_tables()
         self.aux_validation_target = 0
+        self.parameters = {'place':'PARADA PRUEBA'}
 
     def run(self):
         while not self.stop_event.is_set():
@@ -27,11 +22,18 @@ class SqliteManager(threading.Thread):
                         print(aux_data)
                         current_datetime = datetime.now()
                         data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-                        self.insert_transaction((aux_data,data_time))
+                        codigo =aux_data[25:34]
+                        tipo = int(aux_data[14:18])
+                        fecha = aux_data[6:8]+'/'+aux_data[8:10]+'/'+aux_data[10:14]
+                        tiempo = aux_data[0:2]+':'+aux_data[2:4]+':'+aux_data[4:6]
+                        costo = float(int(aux_data[46:54])/100)
+                        saldo = float(int(aux_data[-8:])/100)
+                        saldo_anterior = float(int(aux_data[38:46])/100)
+                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.parameters['place'],costo,saldo,saldo_anterior,data_time))
                         self.aux_validation_target = self.rs232.n_validations
 
     def add_transaction(self,conn, transaction):
-        sql = ''' INSERT INTO transactions(VALUE,DATE)
+        sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,date)
                 VALUES(?,?) '''
         cur = conn.cursor()
         cur.execute(sql, transaction)
@@ -59,12 +61,20 @@ class SqliteManager(threading.Thread):
         sql_statements = [ 
             """CREATE TABLE IF NOT EXISTS transactions (
                     id INTEGER PRIMARY KEY, 
-                    value text    NOT NULL, 
+                    code text    NOT NULL,
+                    type text    NOT NULL,
+                    date_card text NOT NULL,
+                    time_card text NOT NULL,
+                    place   text  NOT NULL,
+                    cost real    NOT NULL,
+                    previous real NOT NULL,
+                    balance real NOT NULL,
                     date timestamp NOT NULL 
             );"""
             ,
             """CREATE TABLE IF NOT EXISTS parameters (
-                    id INTEGER PRIMARY KEY, 
+                    id INTEGER PRIMARY KEY,
+                    place text NOT NULL,
                     time_turnstile INTEGER  NOT NULL,
                     time_open_actuator INTEGER NOT NULL,
                     time_close_actuator INTEGER NOT NULL,
