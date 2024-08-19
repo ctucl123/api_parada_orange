@@ -4,7 +4,6 @@ from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
-import json
 #from audioManager import AudioManager
 app = Flask(__name__)
 stop_event = threading.Event()
@@ -13,25 +12,8 @@ stop_event = threading.Event()
 def helloworld():
     result = None
     if request.method == 'POST':
-        num1 = float(request.form.get('num1', 0))
-        num2 = float(request.form.get('num2', 0))
         operation = request.form.get('operation')
-        if operation == 'Activate':
-            result = manager.activateTurnstile()
-        elif operation == 'Desactivate':
-            result = manager.desactivateTurnstile()
-        elif operation == 'OpenTurnstile':
-            manager.desactivateTurnstile()
-            gpios.turnstileOpen()
-            result = "mecanismo abierto"
-        elif operation == 'BlockTurnstile':
-            manager.desactivateTurnstile()
-            gpios.turnstileBlock()
-            result = "mecanismo cerrado"
-        elif operation == 'ReadRs232':
-            data = rs232.getData()
-            result = f'ultimo dato leido: {data}'
-        elif operation == 'ReadSensor':
+        if operation == 'ReadSensor':
             estado = gpios.ReadSensor()
             result = f'sensor: {estado}'
         elif operation == 'ReadFin':
@@ -39,15 +21,7 @@ def helloworld():
             result = f'sensor: {estado}'
         elif operation == 'generatePass':
             manager.generarPase()
-            #audio.AdelantePorfavor()
-            result = f'pases generados: {manager.activatePass}'
-        elif operation == 'Setup':
-            manager.timer_puerta_general = num1
-            manager.timer_puerta_especial = num2
-            result = f'tiempos actualizados con exito'
-        elif operation == 'TestAudio':
-            #result = audio.AdelantePorfavor()
-            result = 'funcionando el audio'
+            result = f'Pase generado'
         elif operation == 'TestCerradura1':
             result = gpios.testCerradura1()
         elif operation == 'TestCerradura2':
@@ -56,7 +30,6 @@ def helloworld():
             result = gpios.testLuzLed()
         elif operation == 'TestSpecial':
             result = manager.generarEspecialPass()
-            #audio.AdelantePorfavor()
         elif operation == 'ElectroImanOn':
             result == gpios.electroImanOn()
         elif operation == 'ElectroImanOff':
@@ -65,8 +38,6 @@ def helloworld():
             result == gpios.testearReles()
         elif operation == 'ActuadorOff':
             result == gpios.specialDoorOff()
-        elif operation == 'validations':
-            result == rs232.n_validations
     return render_template('home.html', result=result)
 
 @app.route('/api/rs232', methods=['GET', 'POST'])
@@ -74,7 +45,7 @@ def rs232_Api():
     if request.method == 'GET':
         operation = request.form.get('operation')
         if operation == "validations":
-            return  json.dumps({"validations":rs232.n_validations})
+            return  jsonify({"validations":rs232.n_validations})
         return
 
 @app.route('/api/mecanism', methods=['GET', 'POST'])
@@ -88,8 +59,41 @@ def mecanism_Api():
             "time_delay_turnstile":manager.time_delay_turnstile,
             "time_delay_special":manager.time_delay_special,
         }
-        return jsonify(params_mecanism)
-
+        return jsonify({'result':params_mecanism})
+    elif request.method == 'POST':
+        options = request.get_json()
+        if options['operation'] == 'ReadSensor':
+            result = gpios.ReadSensor()
+        elif options['operation'] == 'ReadFin':
+            result = gpios.ReadFinCarrera()
+        elif options['operation'] == 'generatePass':
+            manager.generarPase()
+            result = 'Pase Generado'
+        elif options['operation'] == 'TestCerradura1':
+            result = gpios.testCerradura1()
+        elif options['operation'] == 'TestCerradura2':
+            result = gpios.testCerradura2()
+        elif options['operation'] == 'TestLuzLed':
+            result = gpios.testLuzLed()
+        elif options['operation'] == 'TestSpecial':
+            result = manager.generarEspecialPass()
+        elif options['operation'] == 'ElectroImanOn':
+            result = gpios.electroImanOn()
+        elif options['operation'] == 'ElectroImanOff':
+            result = gpios.gpios.electroImanOff()
+        elif options['operation'] == 'TestearReles':
+            result = gpios.testearReles()
+        elif options['operation'] == 'ActuadorOff':
+            result = gpios.specialDoorOff()
+        elif options['operation'] == 'OpenSpecial':
+            gpios.specialDoorOpen()
+            result = "puerta especial abriendose !!!!"
+        elif options['operation'] == 'CloseSpecial':
+            gpios.specialDoorClose()
+            result = "puerta especial cerrandose !!!!"
+        else: 
+            pass
+        return jsonify({'result':result})
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
