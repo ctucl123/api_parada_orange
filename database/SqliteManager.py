@@ -38,15 +38,15 @@ class SqliteManager(threading.Thread):
 
     def add_transaction(self,conn, transaction):
         sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,date)
-                VALUES(?,?) '''
+                VALUES(?,?,?,?,?,?,?,?,?) '''
         cur = conn.cursor()
         cur.execute(sql, transaction)
         conn.commit()
         return cur.lastrowid
 
     def add_parameter(self,conn, parameter):
-        sql = ''' INSERT INTO parameters(time_turnstile,time_open_actuator,time_close_actuator,time_special_door,time_delay_turnstile,time_delay_special,date)
-                VALUES(?,?,?,?,?,?,?) '''
+        sql = ''' INSERT INTO parameters(place,time_turnstile,time_open_actuator,time_close_actuator,time_special_door,time_delay_turnstile,time_delay_special,date)
+                VALUES(?,?,?,?,?,?,?,?) '''
         cur = conn.cursor()
         cur.execute(sql, parameter)
         conn.commit()
