@@ -33,7 +33,7 @@ class SqliteManager(threading.Thread):
                         costo = float(int(aux_data[46:54])/100)
                         saldo = float(int(aux_data[-8:])/100)
                         saldo_anterior = float(int(aux_data[38:46])/100)
-                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.parameters['place'],costo,saldo,saldo_anterior,data_time))
+                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.parameters['place'],costo,saldo_anterior,saldo,data_time))
                         self.aux_validation_target = self.rs232.n_validations
 
     def add_transaction(self,conn, transaction):
