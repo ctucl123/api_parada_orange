@@ -85,7 +85,7 @@ def mecanism_Api():
         elif json_data['operation'] == 'ElectroImanOn':
             result = gpios.electroImanOn()
         elif json_data['operation'] == 'ElectroImanOff':
-            result = gpios.gpios.electroImanOff()
+            result = gpios.electroImanOff()
         elif json_data['operation'] == 'TestearReles':
             result = gpios.testearReles()
         elif json_data['operation'] == 'ActuadorOff':
