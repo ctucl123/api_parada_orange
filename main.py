@@ -76,6 +76,14 @@ def rs232_Api():
         if operation == "validations":
             return  json.dumps({"validations":rs232.n_validations})
         return
+    
+@app.route('/api/database', methods=['GET', 'POST'])
+def db_Api():
+    if request.method == 'GET':
+        operation = request.form.get('operation')
+        if operation == "transactions":
+            return  database.get_transactions()
+        return
 
 @app.route("/datos")
 def datos():
@@ -94,7 +102,7 @@ if __name__ == "__main__":
     gpios = GpiosManager()
     rs232.start()
     manager.start()
-    #database.start()
+    database.start()
     # audio.start()
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)
@@ -102,6 +110,6 @@ if __name__ == "__main__":
         stop_event.set()
         rs232.join()
         manager.join()
-        #database.join()
+        database.join()
         # audio.join()
         print("programa terminado!")

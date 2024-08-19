@@ -16,15 +16,18 @@ class SqliteManager(threading.Thread):
         self.rs232 = rs232
         self.stop_event = stop_event
         self.create_tables()
+        self.aux_validation_target = 0
 
     def run(self):
         while not self.stop_event.is_set():
             with self.rs232.lock:
                 if self.rs232.validation:
-                    aux_data = self.rs232.getData()
-                    current_datetime = datetime.now()
-                    data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-                    self.insert_transaction((aux_data,data_time))
+                    if self.rs232.n_validations != self.aux_validation_target:
+                        aux_data = self.rs232.getData()
+                        current_datetime = datetime.now()
+                        data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                        self.insert_transaction((aux_data,data_time))
+                        self.aux_validation_target = self.rs232.n_validations
 
     def add_transaction(self,conn, transaction):
         sql = ''' INSERT INTO transactions(VALUE,DATE)
