@@ -4,6 +4,7 @@ from rs232 import rs232Comunication
 from gpiosManager import GpiosManager
 from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
+import json
 #from audioManager import AudioManager
 app = Flask(__name__)
 stop_event = threading.Event()
@@ -67,6 +68,14 @@ def helloworld():
         elif operation == 'validations':
             result == rs232.n_validations
     return render_template('home.html', result=result)
+
+@app.route('/api/rs232', methods=['GET', 'POST'])
+def rs232_Api():
+    if request.method == 'GET':
+        operation = request.form.get('operation')
+        if operation == "validations":
+            return  json.dumps({"validations":rs232.n_validations})
+        return
 
 @app.route("/datos")
 def datos():
