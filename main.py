@@ -143,16 +143,17 @@ if __name__ == "__main__":
     manager = Manager(stop_event=stop_event,rs232=rs232) 
     database = SqliteManager(stop_event=stop_event,rs232=rs232) 
     init_params = database.currentParameters()
-    manager.time_puerta_general = init_params[2]
-    manager.time_puerta_especial = init_params[5]
-    manager.time_open_special = init_params[3]
-    manager.time_close_special = init_params[4]
-    manager.time_delay_turnstile = init_params[6]
-    manager.time_delay_special = init_params[7]
-    database.uuid = init_params[9]
-    database.place = init_params[1]
-    database.lat = init_params[10]
-    database.lon = init_params[11]
+    if init_params != None:
+        manager.time_puerta_general = init_params[2]
+        manager.time_puerta_especial = init_params[5]
+        manager.time_open_special = init_params[3]
+        manager.time_close_special = init_params[4]
+        manager.time_delay_turnstile = init_params[6]
+        manager.time_delay_special = init_params[7]
+        database.uuid = init_params[9]
+        database.place = init_params[1]
+        database.lat = init_params[10]
+        database.lon = init_params[11]
     # audio = AudioManager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
     rs232.start()
