@@ -99,7 +99,7 @@ def db_Api():
                      params['time_delay_special'],params['date'],params['uuid'],
                      params['lat'],params['lon']
                      )
-            print(_data)
+            database.insert_parameter(_data)
         except:
             return jsonify({"error": "No se recibió JSON Adecuadamente"}), 400
         
