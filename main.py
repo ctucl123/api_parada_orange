@@ -51,7 +51,6 @@ def rs232_Api():
 
 @app.route('/api/mecanism', methods=['GET', 'POST'])
 def mecanism_Api():
-    print("se realiza una peticion")
     if request.method == 'GET':
         params_mecanism = {
             "time_puerta_general":manager.time_puerta_general,
@@ -66,7 +65,6 @@ def mecanism_Api():
         json_data = request.get_json()
         if not json_data:
             return jsonify({"error": "No se recibió JSON"}), 400
-        print(json_data)
         if json_data['operation'] == 'ReadSensor':
             result = gpios.ReadSensor()
         elif json_data['operation'] == 'ReadFin':
@@ -97,6 +95,8 @@ def mecanism_Api():
             gpios.specialDoorClose()
             result = "puerta especial cerrandose !!!!"
         return jsonify({'result':result})
+    else:
+        return 'bad request!', 400
     
 
 
@@ -142,11 +142,6 @@ def db_Api():
 @app.route("/datos")
 def datos():
     return rs232.getData()
-
-
-
-
-
 
 if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
