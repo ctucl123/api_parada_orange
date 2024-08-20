@@ -44,8 +44,8 @@ def helloworld():
 @app.route('/api/rs232', methods=['GET', 'POST'])
 def rs232_Api():
     if request.method == 'GET':
-        operation = request.form.get('operation')
-        if operation == "validations":
+        operation = request.get_json()
+        if operation['operation'] == "validations":
             return  jsonify({"validations":rs232.n_validations})
         return
 
@@ -103,10 +103,10 @@ def mecanism_Api():
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
-        operation = request.form.get('operation')
-        if operation == "transactions":
+        operation = request.get_json()
+        if operation['operation'] == "transactions":
             return  database.get_transactions()
-        elif operation == "parameters":
+        elif operation['operation'] == "parameters":
             return database.get_parameters()
         else:
             return 'bad request!', 400
