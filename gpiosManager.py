@@ -40,7 +40,7 @@ class GpiosManager():
 
     def turnstileOpen(self):
             wiringpi.digitalWrite(self.cerradura1, GPIO.LOW)
-            wiringpi.digitalWrite(self.semaforo, GPIO.HIGH)
+            wiringpi.digitalWrite(self.semaforo, GPIO.LOW)
             return "puerta general abierta"
     
     def turnstileBlock(self):
