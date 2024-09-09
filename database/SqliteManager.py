@@ -4,11 +4,9 @@ from datetime import datetime
 import json
 
 
-class SqliteManager(threading.Thread):
-    def __init__(self,rs232, stop_event):
+class SqliteManager():
+    def __init__(self):
         super().__init__()
-        self.rs232 = rs232
-        self.stop_event = stop_event
         self.create_tables()
         self.aux_validation_target = 0
         self.uuid = "idprueba"
@@ -16,23 +14,6 @@ class SqliteManager(threading.Thread):
         self.lat = "0.0"
         self.lon = "0.0"
 
-    def run(self):
-        while not self.stop_event.is_set():
-            with self.rs232.lock:
-                if self.rs232.validation:
-                    if self.rs232.n_validations != self.aux_validation_target:
-                        aux_data = str(self.rs232.data[1:-1])
-                        current_datetime = datetime.now()
-                        data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
-                        codigo =aux_data[25:34]
-                        tipo = int(aux_data[14:18])
-                        fecha = aux_data[6:8]+'/'+aux_data[8:10]+'/'+aux_data[10:14]
-                        tiempo = aux_data[0:2]+':'+aux_data[2:4]+':'+aux_data[4:6]
-                        costo = float(int(aux_data[46:54])/100)
-                        saldo = float(int(aux_data[-8:])/100)
-                        saldo_anterior = float(int(aux_data[38:46])/100)
-                        self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.lat,self.lon,data_time))
-                        self.aux_validation_target = self.rs232.n_validations
 
     def add_transaction(self,conn, transaction):
         sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,uuid,lat,lon,date)

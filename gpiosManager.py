@@ -37,6 +37,17 @@ class GpiosManager():
 
         wiringpi.pullUpDnControl(self.sensor, wiringpi.GPIO.PUD_UP)
         wiringpi.pullUpDnControl(self.fin_carrera, wiringpi.GPIO.PUD_UP)
+        #inicializacion
+        wiringpi.digitalWrite(self.pin_libre3,GPIO.HIGH)
+        wiringpi.digitalWrite(self.pin_libre2,GPIO.HIGH)
+        wiringpi.digitalWrite(self.pin_libre1,GPIO.HIGH)
+        wiringpi.digitalWrite(self.semaforo,GPIO.HIGH)
+        wiringpi.digitalWrite(self.actuador_down,GPIO.HIGH)
+        wiringpi.digitalWrite(self.actuador_up,GPIO.HIGH)
+        wiringpi.digitalWrite(self.electroiman,GPIO.HIGH)
+        wiringpi.digitalWrite(self.cerradura1,GPIO.HIGH)
+
+
 
     def turnstileOpen(self):
             wiringpi.digitalWrite(self.cerradura1, GPIO.LOW)
