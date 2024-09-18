@@ -6,7 +6,7 @@ from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
 
 #from audioManager import AudioManager
-#version 3.3
+#version 3.4
 app = Flask(__name__)
 stop_event = threading.Event()
 
@@ -156,6 +156,7 @@ if __name__ == "__main__":
         database.lon = init_params[11]
     rs232.start()
     manager.start()
+    # audio.start()
 
     try:
         app.run(host='0.0.0.0', port=5000,use_reloader=False)
