@@ -4,9 +4,11 @@ from datetime import datetime
 import json
 
 
-class SqliteManager():
-    def __init__(self):
+class SqliteManager(threading.Thread):
+    def __init__(self,rs232, stop_event):
         super().__init__()
+        self.rs232 = rs232
+        self.stop_event = stop_event
         self.create_tables()
         self.aux_validation_target = 0
         self.uuid = "idprueba"
@@ -14,6 +16,27 @@ class SqliteManager():
         self.lat = "0.0"
         self.lon = "0.0"
 
+    def run(self):
+        while not self.stop_event.is_set():
+            with self.rs232.lock:
+                if self.rs232.validation:
+                    if self.rs232.n_validations != self.aux_validation_target:
+                        try:
+                            aux_data = str(self.rs232.data[1:-1])
+                            current_datetime = datetime.now()
+                            data_time = current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+                            codigo =aux_data[25:34]
+                            tipo = int(aux_data[14:18])
+                            fecha = aux_data[6:8]+'/'+aux_data[8:10]+'/'+aux_data[10:14]
+                            tiempo = aux_data[0:2]+':'+aux_data[2:4]+':'+aux_data[4:6]
+                            costo = float(int(aux_data[46:54])/100)
+                            saldo = float(int(aux_data[-8:])/100)
+                            saldo_anterior = float(int(aux_data[38:46])/100)
+                            self.insert_transaction((codigo,tipo,fecha,tiempo,self.place,costo,saldo_anterior,saldo,self.uuid,self.lat,self.lon,data_time))
+                            self.aux_validation_target = self.rs232.n_validations
+                            print(f'transaccion exitosa! CODIGO:{codigo}')
+                        except:
+                            print("Hubo un error al momento de registrar la transaccion")
 
     def add_transaction(self,conn, transaction):
         sql = ''' INSERT INTO transactions(code,type,date_card,time_card,place,cost,previous,balance,uuid,lat,lon,date)
@@ -98,7 +121,7 @@ class SqliteManager():
         try:
             with sqlite3.connect('app.db') as conn:
                 transaction_id = self.add_transaction(conn, _data)
-                print(f'Created a TRANSACTION with the id {transaction_id}')
+                print(f'ID: {transaction_id}')
         except sqlite3.Error as e:
             print(e)
     def currentParameters(self):
@@ -117,7 +140,7 @@ class SqliteManager():
         try:
             with sqlite3.connect('app.db') as conn:
                 parameter_id = self.add_parameter(conn, _data)
-                print(f'Created a PARAMETERS with the id {parameter_id}')
+                print(f'ID: {parameter_id}')
         except sqlite3.Error as e:
             print(e)
 

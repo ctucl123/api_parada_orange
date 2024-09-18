@@ -141,7 +141,7 @@ if __name__ == "__main__":
     rs232 = rs232Comunication( stop_event=stop_event,com='/dev/ttyUSB0')
     manager = Manager(stop_event=stop_event,rs232=rs232)
     gpios = GpiosManager()
-    database = SqliteManager() 
+    database = SqliteManager(stop_event=stop_event,rs232=rs232) 
     init_params = database.currentParameters()
     if init_params != None:
         manager.time_turnstile = init_params[2]
@@ -156,6 +156,7 @@ if __name__ == "__main__":
         database.lon = init_params[11]
     rs232.start()
     manager.start()
+    database.start()
     # audio.start()
 
     try:
@@ -164,5 +165,6 @@ if __name__ == "__main__":
         stop_event.set()
         rs232.join()
         manager.join()
+        database.join()
         # audio.join()
         print("programa terminado!")
