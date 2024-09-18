@@ -48,26 +48,21 @@ class GpiosManager():
         wiringpi.digitalWrite(self.semaforo, GPIO.HIGH)
         return "puerta general bloqueada" 
 
-    def testCerradura1(self):
+    def testLock(self):
         wiringpi.digitalWrite(self.cerradura1, GPIO.LOW)
         time.sleep(2)
         wiringpi.digitalWrite(self.cerradura1, GPIO.HIGH)
         time.sleep(2)
         return 'Cerradura 1 testeada con exito'
     
-    def testLuzLed(self):
+    def testArrow(self):
         wiringpi.digitalWrite(self.semaforo, GPIO.LOW)
         time.sleep(2)
         wiringpi.digitalWrite(self.semaforo, GPIO.HIGH)
         time.sleep(2)
         return 'Luz Led testeada con exito'
     
-    def testCerradura2(self):
-        wiringpi.digitalWrite(self.pin_libre1, GPIO.LOW)
-        time.sleep(2)
-        wiringpi.digitalWrite(self.pin_libre1, GPIO.HIGH)
-        time.sleep(2)
-        return 'Cerradura 2 testeada con exito'
+  
 
     def specialDoorOpen(self):
         wiringpi.digitalWrite(self.actuador_down, GPIO.HIGH)
@@ -99,7 +94,7 @@ class GpiosManager():
         wiringpi.digitalWrite(self.electroiman,GPIO.HIGH)
         return 'electro iman desactivado'
     
-    def testearReles(self):
+    def testRelay(self):
         for i in range(3):
             wiringpi.digitalWrite(self.cerradura1,GPIO.LOW)
             time.sleep(1)
