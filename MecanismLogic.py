@@ -3,6 +3,8 @@ import threading
 import time
 import subprocess
 
+#version 1.1
+
 doors =  GpiosManager()
 
 
