@@ -75,7 +75,7 @@ def mecanism_Api():
             result = "Pase Especial Generado"
         elif json_data['operation'] == 'test_relay':
             gpios.testRelay()
-            result = "puerta especial Apagada"
+            result = "Testeo de Reles"
         elif json_data['operation'] == 'actuador_off':
             gpios.specialDoorOff()
             result = "puerta especial Apagada"
