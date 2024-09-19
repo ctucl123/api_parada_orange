@@ -106,7 +106,7 @@ class GpiosManager():
         return 'electro iman desactivado'
     
     def testRelay(self):
-        for i in range(3):
+        for i in range(1):
             wiringpi.digitalWrite(self.cerradura1,GPIO.LOW)
             time.sleep(1)
             wiringpi.digitalWrite(self.electroiman,GPIO.LOW)
