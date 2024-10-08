@@ -6,7 +6,7 @@ from MecanismLogic import Manager
 from database.SqliteManager import SqliteManager
 
 #from audioManager import AudioManager
-#version 3.5
+#version 3.6
 app = Flask(__name__)
 stop_event = threading.Event()
 
@@ -103,6 +103,8 @@ def db_Api():
         operation = request.get_json()
         if operation['operation'] == "transactions":
             return  database.get_transactions()
+        elif operation['operation'] == "last_transactions":
+            return  database.get_last_transactions()
         elif operation['operation'] == "parameters":
             return database.get_parameters()
         else:

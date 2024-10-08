@@ -62,6 +62,16 @@ class SqliteManager(threading.Thread):
             resultado = [dict(zip(nombres_columnas, fila)) for fila in filas]
             json_resultado = json.dumps(resultado, indent=4)
             return json_resultado
+    def get_last_transactions(self):
+        with sqlite3.connect('app.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute(f"SELECT * FROM transactions ORDER BY date DESC LIMIT 10")
+            filas = cursor.fetchall()
+            nombres_columnas = [descripcion[0] for descripcion in cursor.description]
+            resultado = [dict(zip(nombres_columnas, fila)) for fila in filas]
+            json_resultado = json.dumps(resultado, indent=4)
+            return json_resultado
+
      
     def get_parameters(self):
         with sqlite3.connect('app.db') as conn:
