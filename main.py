@@ -105,6 +105,7 @@ def db_Api():
             return  database.get_transactions()
         elif operation['operation'] == "last_transactions":
             result = database.get_last_transactions()
+            print(result)
             return  jsonify({'result':result})
         elif operation['operation'] == "parameters":
             return database.get_parameters()

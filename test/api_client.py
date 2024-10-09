@@ -36,11 +36,17 @@ def actualizarDatos(payload):
 def leerDatosTiempos():
     response = requests.request("GET", "http://192.168.1.92:5000/api/mecanism", headers=headers)
     print(response.text)
-
+def probarData():
+    action = {
+    "operation":"test_arrow"
+    }
+    response = requests.post("POST", "http://192.168.1.92:5000/api/database", headers=headers,json=action)
+    print(response.text)
 #leerDatosTiempos()
 
 def leerDatabase(payload):
     response = requests.request("GET", "http://192.168.1.92:5000/api/database", headers=headers,data=payload)
     print(response.text)
 
-leerDatabase(operation_json)
+#leerDatabase(operation_json)
+probarData()
