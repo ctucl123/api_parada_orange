@@ -100,7 +100,7 @@ def mecanism_Api():
 @app.route('/api/database', methods=['GET', 'POST'])
 def db_Api():
     if request.method == 'GET':
-        operation = request.get_json()
+        operation = request.args.get('operation')
         if operation['operation'] == "transactions":
             return  database.get_transactions()
         elif operation['operation'] == "last_transactions":
