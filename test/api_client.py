@@ -20,7 +20,7 @@ headers = {
   'Content-Type': 'application/json'
 }
 operation_json = json.dumps({
-    "operation":"transactions"
+    "operation":"last_transactions"
 })
 
 #response = requests.request("POST", url, headers=headers, data=payload)
@@ -28,19 +28,19 @@ operation_json = json.dumps({
 #print(response.text)
 
 def actualizarDatos(payload):
-    response = requests.request("POST", "http://192.168.0.102:5000/api/database", headers=headers, data=payload)
+    response = requests.request("POST", "http://192.168.1.92:5000/api/database", headers=headers, data=payload)
     print(response.text)
 
 #actualizarDatos(data_json)
 
 def leerDatosTiempos():
-    response = requests.request("GET", "http://192.168.0.100:5000/api/mecanism", headers=headers)
+    response = requests.request("GET", "http://192.168.1.92:5000/api/mecanism", headers=headers)
     print(response.text)
 
-leerDatosTiempos()
+#leerDatosTiempos()
 
 def leerDatabase(payload):
-    response = requests.request("GET", "http://192.168.0.100:5000/api/database", headers=headers,data=payload)
+    response = requests.request("GET", "http://192.168.1.92:5000/api/database", headers=headers,data=payload)
     print(response.text)
 
 leerDatabase(operation_json)
