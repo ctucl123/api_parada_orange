@@ -101,9 +101,9 @@ def mecanism_Api():
 def db_Api():
     if request.method == 'GET':
         operation = request.args.get('operation')
-        if operation['operation'] == "transactions":
+        if operation == "transactions":
             return  database.get_transactions()
-        elif operation['operation'] == "last_transactions":
+        elif operation == "last_transactions":
             result = database.get_last_transactions()
             print(result)
             return  jsonify({'result':result})
