@@ -48,5 +48,4 @@ def leerDatabase(payload):
     response = requests.request("GET", "http://192.168.1.92:5000/api/database", headers=headers,data=payload)
     print(response.text)
 
-#leerDatabase(operation_json)
-probarData()
+leerDatabase(operation_json)
